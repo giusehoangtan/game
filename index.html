@@ -39,7 +39,7 @@
 
   /* Nút ⚙️ + thông báo */
   #gear{position:fixed;top:8px;right:8px;z-index:200;width:44px;height:44px;border:0;
-    background:none;font-size:24px;opacity:.3}
+    background:none;font-size:24px;opacity:.6}
   #toast{position:fixed;top:14px;left:50%;z-index:400;transform:translateX(-50%);padding:8px 16px;
     border-radius:20px;background:rgba(0,0,0,.75);color:#fff;opacity:0;transition:opacity .2s;pointer-events:none}
   #toast.show{opacity:1}
@@ -213,6 +213,9 @@
   .row{display:flex;flex-wrap:wrap;gap:8px}
   .btn{padding:12px 16px;border:2px solid #d9a400;border-radius:14px;background:#fff8dc;font-size:16px}
   .btn.on{background:#ffd93b;font-weight:700}
+  .okbar{position:sticky;bottom:-18px;margin:14px -18px -18px;padding:12px 18px 18px;background:linear-gradient(transparent,#fff 30%)}
+  .ok{width:100%;padding:14px;border:0;border-radius:16px;background:#4cb84a;color:#fff;font-size:20px;font-weight:800;box-shadow:0 4px 0 #2e7d32}
+  .ok:active{transform:translateY(3px);box-shadow:0 1px 0 #2e7d32}
   .x{position:absolute;top:8px;right:8px;width:40px;height:40px;border:0;background:none;font-size:22px}
   label{display:flex;gap:10px;align-items:center;padding:6px 0;font-size:16px}
   label input{width:22px;height:22px}
@@ -287,7 +290,7 @@
 <button id="homeBtn" aria-label="Về trang chủ" hidden>🏠</button>
 <button id="peek" aria-label="Giữ để xem hình mẫu" hidden>👁️</button>
 <button id="sound" data-sfx="none" aria-label="Bật/tắt âm thanh">🔊</button>
-<button id="gear" aria-label="Cài đặt cho phụ huynh (giữ 1 giây)">⚙️</button>
+<button id="gear" aria-label="Cài đặt">⚙️</button>
 <div id="toast"></div>
 
 <div id="panel" hidden>
@@ -328,6 +331,8 @@
     <h3>Xếp khối: cỡ lưới</h3>
     <div id="gridSizes" class="row"></div>
     <p>Lưới nhỏ thì dễ hơn. Bé quen rồi thì chọn lưới lớn.</p>
+
+    <div class="okbar"><button id="ok" class="ok" data-sfx="none">OK</button></div>
   </div>
 </div>
 
@@ -931,6 +936,7 @@ function closePanel() {
 }
 
 $('close').addEventListener('click', closePanel);
+$('ok').addEventListener('click', () => { sfx.start(); closePanel(); }); // OK: áp dụng cài đặt
 $('useBuiltIn').addEventListener('change', e => { settings.useBuiltIn = e.target.checked; saveSettings(); dirty = true; });
 $('useOwn').addEventListener('change', e => { settings.useOwn = e.target.checked; saveSettings(); dirty = true; });
 $('addPhoto').addEventListener('click', () => $('fileInput').click());
@@ -960,10 +966,7 @@ $('fileInput').addEventListener('change', async e => {
   renderSettings();
 });
 
-let holdTimer;
-$('gear').addEventListener('pointerdown', () => { holdTimer = setTimeout(openPanel, 1000); });
-['pointerup', 'pointerleave', 'pointercancel'].forEach(type =>
-  $('gear').addEventListener(type, () => clearTimeout(holdTimer)));
+$('gear').addEventListener('click', openPanel); // chạm là mở cài đặt
 
 /* ======================================================================
    GAME 2: XẾP KHỐI (kiểu Block Blast, bản dễ cho bé)
