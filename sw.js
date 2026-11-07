@@ -1,5 +1,5 @@
 // Lưu game vào máy để chơi offline. Mở lần sau tự cập nhật bản mới (nếu có mạng).
-const CACHE = 'ghep-hinh-v6';
+const CACHE = 'ghep-hinh-v7';
 const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
